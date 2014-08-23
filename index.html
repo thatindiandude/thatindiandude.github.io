@@ -1,8 +1,106 @@
 <!doctype html>
 <html>
 
-<body>
-<h1>hello world</h1>
+<head>
+  <title>Santosh Mohan</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="../components/platform/platform.js"></script>
+  <link rel="import" href="../components/font-roboto/roboto.html">
+  <script
+  src="/components/platform/platform.js">
+</script>
+<link rel="import"
+  href="/components/core-toolbar/core-toolbar.html">
+<link rel="import"
+  href="/components/core-header-panel/core-header-panel.html">
+<link rel="import"
+  href="/components/core-icons/core-icons.html">
+<link rel="import"
+  href="/components/paper-icon-button/paper-icon-button.html">
+<link rel="import"
+  href="/components/paper-tabs/paper-tabs.html">
+  
+    <link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+  <style>
+    
+    html,body {
+        height: 100%;
+        margin: 0;
+        background-color: #E5E5E5;
+        font-family: 'RobotoDraft', sans-serif;
+        font-weight: 100;
+    }
+    
+    core-toolbar {
+        background-color: #00274c;
+        color: white;
+        opacity: 0.8;
+    }
+
+    
+    core-header-panel {
+        height: 100%;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    #tabs {
+        width: 100%;
+        margin: 0;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    .container {
+        width: 80%;
+        margin: 50px auto;
+    }
+
+    @media (min-width: 481px) {
+        #tabs {
+            width: 200px;
+        }
+        .container {
+            width: 400px;
+        }
+    }
+
+  </style>
+</head>
+
+<body unresolved touch-action="auto">
+    <core-toolbar class="medium-tall">
+
+        <span style="font-family: 'Poiret One', cursive; margin:0 auto;font-size: 40px; color: #b9b309;">Santosh Mohan</span>
+      
+        <paper-tabs class="bottom fit" style="font-weight:200;opacity:1;" id="all">
+            <paper-tab id="projects">PROJECTS</paper-tab>
+            <paper-tab id="blog">BLOG</paper-tab>
+            <paper-tab id="photos">PHOTOS</paper-tab>
+        </paper-tabs>
+
+    </core-toolbar>
+
+    <script>
+        $(document).ready(function () {
+            $("#projects").click(function() {
+                $('body').css('background', '#E5E5E5');
+            });
+            $("#blog").click(function() {
+                $('body').css('background', '#cf7019');
+            }); 
+            $("#photos").click(function() {
+                $('body').css('background', '#4e8abe');
+            }); 
+        });
+    </script>
+
 
 </body>
 
