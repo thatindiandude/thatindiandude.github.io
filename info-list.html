@@ -1,0 +1,33 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../post-service/info-service.html">
+<link rel="import" href="info-box.html">
+
+<polymer-element name="info-list" attributes="show">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    info-box {
+      margin-bottom: 10px;
+    }
+    </style>
+
+    <info-service id="service" posts="{{posts}}"></info-service>
+    
+    <div layout vertical center>
+      <template repeat="{{post in posts}}">
+          <info-box>
+            <img src="{{post.avatar}}" width="70" height="70">
+            <h2>{{post.username}}</h2>
+              <p style="font-weight:300; color: white; font-size: 15px;">{{post.text}}</p>
+          </info-box>
+      </template>
+    </div>
+  </template>
+  <script>
+  Polymer({});
+  </script>
+
+</polymer-element>
