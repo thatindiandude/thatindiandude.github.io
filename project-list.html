@@ -1,0 +1,39 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../post-service/project-service.html">
+<link rel="import" href="project-box.html">
+
+<polymer-element name="project-list" attributes="show">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    project-box {
+      height: 150px;
+      width: 150px;
+    }
+    </style>
+
+    <post-service id="service" posts="{{posts}}"></post-service>
+    
+    <div layout vertical center>
+      <table>
+        <tr>
+          <template repeat="{{post in posts}}">
+            <td>
+              <post-card>
+                <img src="{{post.avatar}}">
+                <h2>{{post.username}}</h2>
+              </post-card>
+            </td>
+          </template>
+        </tr>
+      </table>
+    </div>
+  </template>
+  <script>
+  Polymer({});
+  </script>
+
+</polymer-element>
