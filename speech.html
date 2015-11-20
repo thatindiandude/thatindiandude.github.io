@@ -12,7 +12,6 @@ bootstrap.min.css">
 bootstrap/3.3.5/css/bootstrap-theme.min.css"
 Rel="stylesheet" id="bs-theme-stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="Tree-Demo.css"></link>
 </head>
   <body>
 
@@ -330,8 +329,8 @@ Rel="stylesheet" id="bs-theme-stylesheet">
       var speechRecognition = function () { 
         var recognition = new webkitSpeechRecognition();
         recognition.onresult = function(event) { 
-          console.log("hi");
-          console.log(event) 
+          var result = event; 
+          console.log(result);
         }
         recognition.start();
       }
