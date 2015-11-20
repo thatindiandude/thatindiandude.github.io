@@ -6,6 +6,18 @@
 <body>
 
 	<div ><button onclick="speechRecognition()">Click me</button></div>
+	
+<script type="text/javascript">
+	
+	var speechRecognition = function () {	
+		var recognition = new webkitSpeechRecognition();
+		recognition.onresult = function(event) { 
+			console.log("hi");
+		  console.log(event) 
+		}
+		recognition.start();
+	}
 
+</script>
 </body>
 </html>
