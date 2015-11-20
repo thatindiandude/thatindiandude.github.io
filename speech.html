@@ -326,7 +326,7 @@ Rel="stylesheet" id="bs-theme-stylesheet">
         
       }
 
-      var speechRecognition = function (nodeWithFocus) { 
+      var speechRecognition = function () { 
         var recognition = new webkitSpeechRecognition();
         recognition.onresult = function(event) { 
           nodeWithFocus.textContent = event['results'][0][0]['transcript'];
