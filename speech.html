@@ -329,8 +329,7 @@ Rel="stylesheet" id="bs-theme-stylesheet">
       var speechRecognition = function () { 
         var recognition = new webkitSpeechRecognition();
         recognition.onresult = function(event) { 
-          var result = event; 
-          console.log(result);
+          console.log(event['results'][0][0]['transcript']);
         }
         recognition.start();
       }
