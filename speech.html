@@ -331,7 +331,7 @@ Rel="stylesheet" id="bs-theme-stylesheet">
         recognition.onresult = function(event) { 
           var topResult = event['results'][0][0]['transcript'];
           nodeWithFocus.textContent = topResult;
-          console.log(nodeWithFocus);
+          redrawTree(); 
         }
         recognition.start();
       }
