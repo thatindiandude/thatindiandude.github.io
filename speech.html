@@ -268,9 +268,9 @@ Rel="stylesheet" id="bs-theme-stylesheet">
 
       //Function Called for new node even (key press n or grab release)
       function newNodeEvent(){
-                    cout_0.innerHTML = "n/new node";
-            nodeWithFocus.addChildren();
-            redrawTree();
+        cout_0.innerHTML = "n/new node";
+        nodeWithFocus.addChildren();
+        redrawTree();
       }
 
       //Leap variables and code
@@ -429,9 +429,12 @@ Rel="stylesheet" id="bs-theme-stylesheet">
         
       }
 
+      // initialize speech recognition API
+      // store top result for node content
       var speechRecognition = function () { 
         var recognition = new webkitSpeechRecognition();
         recognition.onresult = function(event) { 
+          // top result is the most confident interpretation of audio
           var topResult = event['results'][0][0]['transcript'];
       	  console.log(topResult);
       	  nodeWithFocus.textContent = topResult;
