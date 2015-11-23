@@ -274,7 +274,7 @@ Rel="stylesheet" id="bs-theme-stylesheet">
       }
 
       //Leap variables and code
-      var GRAB_THRESHOLD = 0.9;
+      var GRAB_THRESHOLD = 0.8;
       var handPresent = false;
       var grabbing = false;
       var swiping = false;
@@ -433,8 +433,7 @@ Rel="stylesheet" id="bs-theme-stylesheet">
         var recognition = new webkitSpeechRecognition();
         recognition.onresult = function(event) { 
           var topResult = event['results'][0][0]['transcript'];
-      	  console.log(topResult);
-      	  nodeWithFocus.textContent = topResult;
+          nodeWithFocus.textContent = topResult;
           redrawTree(); 
         }
         recognition.start();
