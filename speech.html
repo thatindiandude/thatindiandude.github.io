@@ -16,11 +16,11 @@ Rel="stylesheet" id="bs-theme-stylesheet">
   <body>
 
     <div class ="container">
-	     <h3> Leap Notebook </h3>
+       <h3> Leap Notebook </h3>
     </div>
 
     <div "padding-left: 50px;">
-      <p id="Instructions"> The blue node is the node with focus, add nodes to the blue node by pressing 'n', use the arrow keys to traverse the tree.  <p>
+      <p id="Instructions"> The blue node is the node with focus, add nodes to the blue node by pressing 'n', use the arrow keys to traverse the tree. If you have a Leap Motion Controller you can add nodes by making and releasing a fist. To traverse the tree with a Leap Controller swipe up, down, left, or right.  <p>
     <div>
     
     <button onclick="speechRecognition()">Speak a note</button>
@@ -33,6 +33,8 @@ Rel="stylesheet" id="bs-theme-stylesheet">
     <div>
 
     <element onkeypress="check"><element>
+
+    <script src="http://js.leapmotion.com/leap-0.6.3.min.js"></script>
 
     <style type="text/css">
 
@@ -147,7 +149,7 @@ Rel="stylesheet" id="bs-theme-stylesheet">
         var x = node.x + offsetX;
         var y = node.y + offsetY;
 
-        // add fix so nodes and text do not draw if off screen;
+
 
         var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
         ellipse.setAttribute("cx",x);
@@ -156,6 +158,10 @@ Rel="stylesheet" id="bs-theme-stylesheet">
         ellipse.setAttribute("ry",nodeHeight);
         ellipse.setAttribute("fill", node.fill);
         svg1.appendChild(ellipse);
+
+        // add fix so text does not draw if off svg1 screen
+        if(x < -10 || y < -10 || svgWidth < x || svgHeight < y)
+          return;
 
         //drawing text area
         var foreignObject = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
@@ -222,6 +228,123 @@ Rel="stylesheet" id="bs-theme-stylesheet">
         drawTree(root);
       }
 
+      //Function called by key press up event as well as swipe up.
+      function upEvent(){
+        cout_0.innerHTML = "up/traverse children up";
+        if(nodeWithFocus.parent != "no parent" && (nodeWithFocus.parent.favoredChild - 1) >= 0){
+          nodeWithFocus.parent.favoredChild--;
+          nodeWithFocus = nodeWithFocus.parent.children[nodeWithFocus.parent.favoredChild];
+          redrawTree();
+        }
+      }
+
+      //Function called by key press down event as well as swipe down.
+      function downEvent(){
+        cout_0.innerHTML = "down/traverse children down";
+        if(nodeWithFocus.parent != "no parent" && (nodeWithFocus.parent.favoredChild + 1) < nodeWithFocus.parent.children.length){
+          nodeWithFocus.parent.favoredChild++;
+          nodeWithFocus = nodeWithFocus.parent.children[nodeWithFocus.parent.favoredChild];
+         redrawTree();
+        }
+      }
+
+      //Function called by key press left event as well as swipe left.
+      function leftEvent(){
+        cout_0.innerHTML = "left/up tree";
+        if(nodeWithFocus.parent != "no parent"){
+          nodeWithFocus = nodeWithFocus.parent;
+          redrawTree();
+        }
+      }
+
+      //Function called by key press right event as well as swipe right.
+      function rightEvent(){
+        cout_0.innerHTML = "right/down tree";
+        if(nodeWithFocus.children.length > 0){
+          nodeWithFocus = nodeWithFocus.children[nodeWithFocus.favoredChild]; 
+          redrawTree();
+        }
+      }
+
+      //Function Called for new node even (key press n or grab release)
+      function newNodeEvent(){
+                    cout_0.innerHTML = "n/new node";
+            nodeWithFocus.addChildren();
+            redrawTree();
+      }
+
+      //Leap variables and code
+      var GRAB_THRESHOLD = 0.9;
+      var handPresent = false;
+      var grabbing = false;
+      var swiping = false;
+      var controllerOptions = {enableGestures: true};
+      Leap.loop(controllerOptions, function(frame) {
+        if (frame.gestures.length > 0) {
+          for (var i = 0; i < frame.gestures.length; ++i) {
+            var gesture = frame.gestures[i];
+            /*
+            if (gesture.type === "circle") {
+              cout_0.innerHTML = "n/new node";
+              nodeWithFocus.addChildren();
+              redrawTree();
+            }
+            */
+            if (gesture.type === "swipe") {
+              if (!swiping && gesture.state === "start") {
+                swiping = true;
+                var xDir = gesture.direction[0];
+                var yDir = gesture.direction[1];
+                var swipeState = gesture.state;
+                console.log("swipe:", swipeState, xDir, yDir);
+                if (Math.abs(yDir) >= Math.abs(xDir)) {
+                  if (yDir >= 0) {
+                    upEvent();
+                  } else {
+                    downEvent();
+                  }
+                } else {
+                  if (xDir <= 0) {
+                    leftEvent();
+                  } else {
+                    rightEvent();
+                  }
+                }
+              } else if (swiping && gesture.type === "stop") {
+                swiping = false;
+                var xDir = gesture.direction[0];
+                var yDir = gesture.direction[1];
+                var swipeState = gesture.state;
+                console.log("swipe:", swipeState, xDir, yDir);
+              }
+            }
+          }
+        } else if (swiping) {
+          swiping = false;
+          console.log("no gesture");
+        }
+        if (frame.hands.length == 1) {
+          hand = frame.hands[0];
+          if (!handPresent) {
+            handPresent = true;
+            if (hand.grabStrength >= GRAB_THRESHOLD) {
+              grabbing = true;
+            } else {
+              grabbing = false;
+            }
+          } else {
+            if (!grabbing && hand.grabStrength >= GRAB_THRESHOLD) {
+              grabbing = true;
+            } else if (grabbing && hand.grabStrength < GRAB_THRESHOLD) {
+              grabbing = false;
+              newNodeEvent();
+            }
+          }
+        } else {
+          handPresent = false;
+        }
+      });// Leap loop
+
       //initializes a listener that records focus. Must click on canvas to give it focus for keydown events to trigger
       //initializes 4 different listeners that are currently triggered by key press events
       window.onload = function(){
@@ -246,51 +369,31 @@ Rel="stylesheet" id="bs-theme-stylesheet">
 
         document.addEventListener('keydown', function(event) {
           if(event.keyCode == 38) {
-            cout_0.innerHTML = "up/traverse children up";
-            if((nodeWithFocus.parent.favoredChild - 1) >= 0){
-              nodeWithFocus.parent.favoredChild--;
-              nodeWithFocus = nodeWithFocus.parent.children[nodeWithFocus.parent.favoredChild];
-              redrawTree();
-            }
+            upEvent();
           }
         });
 
         document.addEventListener('keydown', function(event) {
           if(event.keyCode == 40) {
-            cout_0.innerHTML = "down/traverse children down";
-            if((nodeWithFocus.parent.favoredChild + 1) < nodeWithFocus.parent.children.length){
-              nodeWithFocus.parent.favoredChild++;
-              nodeWithFocus = nodeWithFocus.parent.children[nodeWithFocus.parent.favoredChild];
-              redrawTree();
-            }
+            downEvent();
           }
         });
 
         document.addEventListener('keydown', function(event) {
           if(event.keyCode == 37) {
-            cout_0.innerHTML = "left/up tree";
-            if(nodeWithFocus.parent != "no parent")
-              nodeWithFocus = nodeWithFocus.parent;
-              nodeWithFocus.changeChildrenVisibility(); 
-              // redrawTree();
+            leftEvent();
           }
         });
 
         document.addEventListener('keydown', function(event) {
           if(event.keyCode == 39) {
-            cout_0.innerHTML = "right/down tree";
-            if(nodeWithFocus.children.length > 0)
-              nodeWithFocus = nodeWithFocus.children[nodeWithFocus.favoredChild]; 
-              redrawTree();
+            rightEvent();
           }
         });
 
         document.addEventListener('keydown', function(event) {
           if(event.keyCode == 78) {
-            cout_0.innerHTML = "n/new node";
-            nodeWithFocus.addChildren();
-            redrawTree();
-
+           newNodeEvent();
           }
         });
 
@@ -317,7 +420,7 @@ Rel="stylesheet" id="bs-theme-stylesheet">
           }
         });
 
-      }
+      } //Onload
 
       // Just a function to call to track scope
       function check(){ 
